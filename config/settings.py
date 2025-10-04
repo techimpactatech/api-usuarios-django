@@ -52,6 +52,10 @@ SPECTACULAR_SETTINGS = {
     'TITLE': 'API de Usuários (Django)',
     'DESCRIPTION': 'CRUD de usuários para comparativo de frameworks',
     'VERSION': 'v1.0',
+    'SERVERS': [{'url': 'http://127.0.0.1:8000', 'description': 'Local'}],
+    'SERVE_INCLUDE_SCHEMA': False,
+    'COMPONENT_SPLIT_REQUEST': True,
+    'SECURITY': [],
 }
 TEMPLATES = [
     {
