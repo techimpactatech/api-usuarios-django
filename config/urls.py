@@ -1,15 +1,30 @@
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from usuarios.views import UsuarioViewSet
-from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
-router = DefaultRouter(trailing_slash='')  # /usuarios e /usuarios/{id} (sem barra no fim)
-router.register('usuarios', UsuarioViewSet, basename='usuario')
+from usuarios.views import UsuarioViewSet
+
+# Swagger (drf-yasg)
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+from rest_framework.permissions import AllowAny
+
+schema_view = get_schema_view(
+    openapi.Info(
+        title="API de Usuários (Django)",
+        default_version='v1',
+        description="CRUD de usuários com paginação 0-based (page/size)",
+    ),
+    public=True,
+    permission_classes=[AllowAny],
+)
+
+router = DefaultRouter()
+router.register(r'usuarios', UsuarioViewSet, basename='usuarios')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include(router.urls)),
-    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
-    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
-] 
+    path('', include(router.urls)),                      # rotas /usuarios
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('redoc/'  , schema_view.with_ui('redoc',   cache_timeout=0), name='schema-redoc'),
+]
